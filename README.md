@@ -33,7 +33,7 @@ We expect a json with enough information to see how many times each endpoint has
 
 - For us, a `ride` is a trip of a user and a vehicle.
 - Implement any consideration you think that is important to prevent starting or finishing a ride.
-- We are interested in how you approach the problem and the architecture rather than in the completeness of your solution. We expect a working demo but you can mock infrastructure like databases, etc... For instance, using in memory storages or files. It is up to you.  
+- We are interested in how you approach the problem and the architecture rather than in the completeness of your solution. We expect a working demo written in Go, but you can mock infrastructure like databases, etc... For instance, using in memory storages or files. It is up to you.  
 - Feel free to make any change to the provided code or use your own.
 - Don't hesitate asking us if you have any question.
 - We love testing.
