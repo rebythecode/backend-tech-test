@@ -8,7 +8,8 @@ import (
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
 
-	backend "github.com/HectorMRC/backend-tech-test"
+	"github.com/HectorMRC/backend-tech-test/metrics"
+	"github.com/HectorMRC/backend-tech-test/ride"
 )
 
 const httpPort = 8080
@@ -17,8 +18,9 @@ func main() {
 	r := chi.NewRouter()
 	r.Use(middleware.Logger)
 
-	r.Post("/rides", backend.RideStartHandler)
-	r.Post("/rides/{id}/finish", backend.RideFinishHandler)
+	r.Post("/rides", ride.RideStartHandler)
+	r.Post("/rides/{id}/finish", ride.RideFinishHandler)
+	r.Post("/metrics", metrics.MetricsHandler)
 
 	if err := http.ListenAndServe(fmt.Sprintf(":%d", httpPort), r); err != http.ErrServerClosed && err != nil {
 		log.Fatalf("Error starting http server <%s>", err)
