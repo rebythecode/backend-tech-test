@@ -6,8 +6,9 @@ const (
 )
 
 type Ride struct {
-	user    string
-	vehicle string
-	status  uint8
-	cost    uint32
+	id        string
+	userID    string
+	vehicleID string
+	cost      uint
+	status    uint8
 }
