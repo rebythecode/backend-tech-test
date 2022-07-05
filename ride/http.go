@@ -100,7 +100,7 @@ func (server *RideServer) RideFinishHandler(w http.ResponseWriter, r *http.Reque
 		return
 	}
 
-	if errors.Is(err, ErrAlreadyFinished) {
+	if errors.Is(err, back.ErrNotAvailable) {
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}

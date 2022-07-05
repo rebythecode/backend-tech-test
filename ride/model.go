@@ -1,12 +1,9 @@
 package ride
 
 import (
-	"errors"
 	"time"
-)
 
-var (
-	ErrAlreadyFinished = errors.New("ride already finished")
+	back "github.com/HectorMRC/backend-tech-test"
 )
 
 type Ride struct {
@@ -28,7 +25,7 @@ func NewRide(userID, vehicleID string) *Ride {
 
 func (ride *Ride) Finish(baseCost, minuteCost int) error {
 	if ride.end != nil {
-		return ErrAlreadyFinished
+		return back.ErrNotAvailable
 	}
 
 	endTime := time.Now()
