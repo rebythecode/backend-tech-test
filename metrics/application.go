@@ -7,8 +7,8 @@ import (
 )
 
 type MetricsRepository interface {
-	Create(ctx context.Context, l *Metrics) error
-	Average(ctx context.Context) (*EndpointMetrics, error)
+	Save(ctx context.Context, l *Metrics) error
+	Retrieve(ctx context.Context) ([]*EndpointMetrics, error)
 }
 
 type MetricsApplication struct {

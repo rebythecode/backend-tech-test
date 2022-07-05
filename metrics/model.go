@@ -5,14 +5,14 @@ import "time"
 type Metrics struct {
 	endpoint string
 	err      error
-	start    time.Duration
-	end      time.Duration
+	start    time.Time
+	end      time.Time
 }
 
 type EndpointMetrics struct {
 	endpoint string
-	success  uint
-	failed   uint
+	success  int64
+	failed   int64
 	min      time.Duration
 	max      time.Duration
 	avg      time.Duration

@@ -2,7 +2,9 @@ package ride
 
 import (
 	"context"
+	"errors"
 
+	back "github.com/HectorMRC/backend-tech-test"
 	"go.uber.org/zap"
 )
 
@@ -28,10 +30,35 @@ func NewRideApplication(unlockPrice, minutePrice int, repo RideRepository, logge
 	}
 }
 
-func (app *RideApplication) Start(userID, vehicleID string) (*Ride, error) {
-	return nil, nil
+func (app *RideApplication) Start(ctx context.Context, userID, vehicleID string) (*Ride, error) {
+	app.logger.Info("processing a \"start\" request",
+		zap.String("user_id", userID),
+		zap.String("vehicle_id", vehicleID))
+
+	if _, err := app.repo.FindActiveByUserOrVehicle(ctx, userID, vehicleID); !errors.Is(err, back.ErrNotFound) {
+		return nil, back.ErrNotAvailable
+	}
+
+	newRide := NewRide(userID, vehicleID)
+	if err := app.repo.Create(ctx, newRide); err != nil {
+		return nil, err
+	}
+
+	return newRide, nil
 }
 
-func (app *RideApplication) Finish(rideID string) (*Ride, error) {
-	return nil, nil
+func (app *RideApplication) Finish(ctx context.Context, rideID string) (*Ride, error) {
+	app.logger.Info("processing a \"finish\" request",
+		zap.String("ride_id", rideID))
+
+	ride, err := app.repo.Find(ctx, rideID)
+	if err != nil {
+		return nil, err
+	}
+
+	if err := ride.Finish(app.unlockPrice, app.minutePrice); err != nil {
+		return nil, err
+	}
+
+	return ride, nil
 }

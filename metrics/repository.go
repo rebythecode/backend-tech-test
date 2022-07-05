@@ -13,11 +13,11 @@ func NewInMemoryMetricsRepository() *InMemoryMetricsRepository {
 	return &InMemoryMetricsRepository{}
 }
 
-func (repo *InMemoryMetricsRepository) Create(ctx context.Context, l *Metrics) error {
-	repo.instances.Store(l, nil)
+func (repo *InMemoryMetricsRepository) Save(ctx context.Context, m *Metrics) error {
+	repo.instances.Store(m, nil)
 	return nil
 }
 
-func (repo *InMemoryMetricsRepository) Average(ctx context.Context) (*EndpointMetrics, error) {
+func (repo *InMemoryMetricsRepository) Retrieve(ctx context.Context) ([]*EndpointMetrics, error) {
 	return nil, nil
 }

@@ -37,7 +37,7 @@ func (repo *InMemoryRideRepository) FindActiveByUserOrVehicle(ctx context.Contex
 	defer repo.mu.RUnlock()
 
 	for _, ride := range repo.instances {
-		if ride.status == RIDE_STATUS_ACTIVE &&
+		if ride.end == nil &&
 			(ride.userID == userID || ride.vehicleID == vehicleID) {
 			return ride, nil
 		}
