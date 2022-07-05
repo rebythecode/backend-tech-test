@@ -2,18 +2,33 @@ package metrics
 
 import "time"
 
-type Metrics struct {
+type Trace struct {
 	endpoint string
 	err      error
 	start    time.Time
-	end      time.Time
+	end      *time.Time
 }
 
-type EndpointMetrics struct {
-	endpoint string
-	success  int64
-	failed   int64
-	min      time.Duration
-	max      time.Duration
-	avg      time.Duration
+type Metrics struct {
+	success int
+	failed  int
+	min     time.Duration
+	max     time.Duration
+	avg     time.Duration
+}
+
+func NewTrace(endpoint string) *Trace {
+	return &Trace{
+		endpoint: endpoint,
+		start:    time.Now(),
+	}
+}
+
+func (trace *Trace) Finish(err *error) {
+	if err != nil {
+		trace.err = *err
+	}
+
+	endTime := time.Now()
+	trace.end = &endTime
 }

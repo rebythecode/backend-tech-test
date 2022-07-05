@@ -62,7 +62,7 @@ func main() {
 
 	rideRepo := ride.NewInMemoryRideRepository()
 	rideApp := ride.NewRideApplication(UnlockPrice, MinutePrice, rideRepo, logger)
-	rideServer := ride.NewRideServer(rideApp, logger)
+	rideServer := ride.NewRideServer(rideApp, metricsApp, logger)
 
 	r := chi.NewRouter()
 	r.Use(middleware.Logger)

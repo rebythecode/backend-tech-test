@@ -7,8 +7,8 @@ import (
 )
 
 type MetricsRepository interface {
-	Save(ctx context.Context, l *Metrics) error
-	Retrieve(ctx context.Context) ([]*EndpointMetrics, error)
+	Create(ctx context.Context, t *Trace) error
+	RetrieveMetricsByEndpoint(ctx context.Context) (map[string]*Metrics, error)
 }
 
 type MetricsApplication struct {
@@ -21,4 +21,19 @@ func NewMetricsApplication(repo MetricsRepository, logger *zap.Logger) *MetricsA
 		repo:   repo,
 		logger: logger,
 	}
+}
+
+func (app *MetricsApplication) StartMetricsTrace(ctx context.Context, endpoint string) (*Trace, error) {
+	trace := NewTrace(endpoint)
+	if err := app.repo.Create(ctx, trace); err != nil {
+		return nil, err
+	}
+
+	return trace, nil
+}
+
+func (app *MetricsApplication) RetrieveMetricsByEndpoint(ctx context.Context) (map[string]*Metrics, error) {
+	app.logger.Info("processing a \"metrics\" request")
+
+	return app.repo.RetrieveMetricsByEndpoint(ctx)
 }

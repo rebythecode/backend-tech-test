@@ -1,0 +1,22 @@
+FROM docker.io/golang:latest as builder
+
+RUN apt update
+
+WORKDIR /app
+
+COPY go.mod go.sum ./
+RUN go mod download
+COPY . .
+
+RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o server cmd/server/main.go
+
+######## Start a new stage from scratch #######
+FROM docker.io/alpine:latest  
+
+RUN apk --no-cache add ca-certificates
+
+WORKDIR /app
+
+COPY --from=builder /app/server .
+
+CMD [ "./server" ]

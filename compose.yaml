@@ -1,0 +1,11 @@
+services:
+    server:
+        container_name: server
+        image: localhost/backend-tech-test:0.1.0
+        restart: always
+        ports:
+            - 8080:8080
+        security_opt:
+            label: disable
+        env_file:
+            - .env

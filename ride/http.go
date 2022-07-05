@@ -6,6 +6,7 @@ import (
 	"net/http"
 
 	back "github.com/HectorMRC/backend-tech-test"
+	"github.com/HectorMRC/backend-tech-test/metrics"
 	"go.uber.org/zap"
 )
 
@@ -17,25 +18,37 @@ type RideHttpBody struct {
 }
 
 type RideServer struct {
-	app    *RideApplication
-	logger *zap.Logger
+	rideApp    *RideApplication
+	metricsApp *metrics.MetricsApplication
+	logger     *zap.Logger
 }
 
-func NewRideServer(app *RideApplication, logger *zap.Logger) *RideServer {
+func NewRideServer(rideApp *RideApplication, metricsApp *metrics.MetricsApplication, logger *zap.Logger) *RideServer {
 	return &RideServer{
-		app:    app,
-		logger: logger,
+		rideApp:    rideApp,
+		metricsApp: metricsApp,
+		logger:     logger,
 	}
 }
 
 func (server *RideServer) RideStartHandler(w http.ResponseWriter, r *http.Request) {
 	var reqBody RideHttpBody
-	if err := json.NewDecoder(r.Body).Decode(&reqBody); err != nil {
+	var err error
+
+	trace, err := server.metricsApp.StartMetricsTrace(r.Context(), "StartRide")
+	if err == nil {
+		defer trace.Finish(&err)
+	} else {
+		server.logger.Error("creating trace",
+			zap.Error(err))
+	}
+
+	if err = json.NewDecoder(r.Body).Decode(&reqBody); err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
 
-	ride, err := server.app.Start(r.Context(), reqBody.UserID, reqBody.VehicleID)
+	ride, err := server.rideApp.Start(r.Context(), reqBody.UserID, reqBody.VehicleID)
 	if errors.Is(err, back.ErrNotAvailable) {
 		w.WriteHeader(http.StatusForbidden)
 		return
@@ -66,14 +79,29 @@ func (server *RideServer) RideStartHandler(w http.ResponseWriter, r *http.Reques
 
 func (server *RideServer) RideFinishHandler(w http.ResponseWriter, r *http.Request) {
 	var reqBody RideHttpBody
-	if err := json.NewDecoder(r.Body).Decode(&reqBody); err != nil {
+	var err error
+
+	trace, err := server.metricsApp.StartMetricsTrace(r.Context(), "FinishRide")
+	if err == nil {
+		defer trace.Finish(&err)
+	} else {
+		server.logger.Error("creating trace",
+			zap.Error(err))
+	}
+
+	if err = json.NewDecoder(r.Body).Decode(&reqBody); err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
 
-	ride, err := server.app.Finish(r.Context(), reqBody.ID)
+	ride, err := server.rideApp.Finish(r.Context(), reqBody.ID)
 	if errors.Is(err, back.ErrNotFound) {
 		w.WriteHeader(http.StatusNotFound)
+		return
+	}
+
+	if errors.Is(err, ErrAlreadyFinished) {
+		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
 
