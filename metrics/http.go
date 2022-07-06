@@ -3,17 +3,16 @@ package metrics
 import (
 	"encoding/json"
 	"net/http"
-	"time"
 
 	"go.uber.org/zap"
 )
 
 type endpointMetrics struct {
-	Success int           `json:"success"`
-	Failed  int           `json:"failed"`
-	Min     time.Duration `json:"min"`
-	Max     time.Duration `json:"max"`
-	Avg     time.Duration `json:"average"`
+	Success int   `json:"success"`
+	Failed  int   `json:"failed"`
+	Min     int64 `json:"min"`
+	Max     int64 `json:"max"`
+	Avg     int64 `json:"average"`
 }
 
 type MetricsHttpBody struct {

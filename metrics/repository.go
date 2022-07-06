@@ -3,7 +3,6 @@ package metrics
 import (
 	"context"
 	"sync"
-	"time"
 )
 
 type InMemoryMetricsRepository struct {
@@ -27,8 +26,7 @@ func (repo *InMemoryMetricsRepository) RetrieveMetricsByEndpoint(ctx context.Con
 			return true
 		}
 
-		duration := trace.end.Sub(trace.start)
-
+		duration := trace.end.UnixNano() - trace.start.UnixNano()
 		metrics, exists := allMetrics[trace.endpoint]
 		if !exists {
 			metrics = &Metrics{
@@ -56,7 +54,7 @@ func (repo *InMemoryMetricsRepository) RetrieveMetricsByEndpoint(ctx context.Con
 	})
 
 	for _, metrics := range allMetrics {
-		metrics.avg /= time.Duration(metrics.failed + metrics.success)
+		metrics.avg /= int64(metrics.failed + metrics.success)
 	}
 
 	return allMetrics, nil

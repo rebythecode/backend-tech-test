@@ -12,9 +12,9 @@ type Trace struct {
 type Metrics struct {
 	success int
 	failed  int
-	min     time.Duration
-	max     time.Duration
-	avg     time.Duration
+	min     int64
+	max     int64
+	avg     int64
 }
 
 func NewTrace(endpoint string) *Trace {
