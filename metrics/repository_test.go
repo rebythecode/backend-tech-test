@@ -5,13 +5,10 @@ import (
 	"errors"
 	"testing"
 	"time"
-
-	"go.uber.org/zap"
 )
 
 func TestRetrieveMetricsByEndpoint(t *testing.T) {
-	logger, _ := zap.NewProduction()
-	defer logger.Sync()
+	t.Parallel()
 
 	repo := NewInMemoryMetricsRepository()
 

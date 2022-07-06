@@ -41,6 +41,8 @@ func (mock *RideRepositoryMock) Create(ctx context.Context, ride *Ride) error {
 }
 
 func TestStart(t *testing.T) {
+	t.Parallel()
+
 	logger, _ := zap.NewProduction()
 	defer logger.Sync()
 
@@ -61,6 +63,8 @@ func TestStart(t *testing.T) {
 }
 
 func TestStart_whenAlreadyOnRide(t *testing.T) {
+	t.Parallel()
+
 	logger, _ := zap.NewProduction()
 	defer logger.Sync()
 
@@ -77,6 +81,8 @@ func TestStart_whenAlreadyOnRide(t *testing.T) {
 }
 
 func TestFinish(t *testing.T) {
+	t.Parallel()
+
 	logger, _ := zap.NewProduction()
 	defer logger.Sync()
 
@@ -110,6 +116,8 @@ func TestFinish(t *testing.T) {
 }
 
 func TestFinish_whenRideDoesNotExists(t *testing.T) {
+	t.Parallel()
+
 	logger, _ := zap.NewProduction()
 	defer logger.Sync()
 
@@ -121,6 +129,8 @@ func TestFinish_whenRideDoesNotExists(t *testing.T) {
 }
 
 func TestFinish_whenRideAlreadyFinished(t *testing.T) {
+	t.Parallel()
+
 	logger, _ := zap.NewProduction()
 	defer logger.Sync()
 
