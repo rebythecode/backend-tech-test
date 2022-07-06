@@ -10,7 +10,7 @@ import (
 
 func TestSetEndtime(t *testing.T) {
 	t.Parallel()
-	ride := NewRide("TestUser", "TestVehicle")
+	ride := NewRide("TestUser", "TestVehicle", time.Now())
 	want := time.Now()
 	if err := ride.SetEndtime(want); err != nil {
 		t.Fatalf("got error when setting endtime: %s", err.Error())
@@ -23,7 +23,7 @@ func TestSetEndtime(t *testing.T) {
 
 func TestSetEndtime_whenAlreadyFinished(t *testing.T) {
 	t.Parallel()
-	ride := NewRide("TestUser", "TestVehicle")
+	ride := NewRide("TestUser", "TestVehicle", time.Now())
 
 	endtime := time.Now()
 	ride.end = &endtime
@@ -52,7 +52,7 @@ func TestSetCost(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
 
-			ride := NewRide("TestUser", "TestVehicle")
+			ride := NewRide("TestUser", "TestVehicle", time.Now())
 			if err := ride.SetEndtime(ride.start.Add(tt.duration)); err != nil {
 				t.Fatalf("got error when setting endtime: %s", err.Error())
 			}
@@ -70,7 +70,7 @@ func TestSetCost(t *testing.T) {
 
 func TestSetCost_whenNoFinished(t *testing.T) {
 	t.Parallel()
-	ride := NewRide("TestUser", "TestVehicle")
+	ride := NewRide("TestUser", "TestVehicle", time.Now())
 	if err := ride.SetCost(100, 18); !errors.Is(err, back.ErrNotAvailable) {
 		t.Fatalf("got error = %s, want = %s", err.Error(), back.ErrNotAvailable)
 	}

@@ -15,11 +15,11 @@ type Ride struct {
 	cost      int
 }
 
-func NewRide(userID, vehicleID string) *Ride {
+func NewRide(userID, vehicleID string, start time.Time) *Ride {
 	return &Ride{
 		userID:    userID,
 		vehicleID: vehicleID,
-		start:     time.Now(),
+		start:     start,
 	}
 }
 

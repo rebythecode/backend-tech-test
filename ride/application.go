@@ -40,7 +40,7 @@ func (app *RideApplication) Start(ctx context.Context, userID, vehicleID string)
 		return nil, back.ErrNotAvailable
 	}
 
-	newRide := NewRide(userID, vehicleID)
+	newRide := NewRide(userID, vehicleID, time.Now())
 	if err := app.repo.Create(ctx, newRide); err != nil {
 		return nil, err
 	}
