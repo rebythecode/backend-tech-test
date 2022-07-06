@@ -3,6 +3,7 @@ package ride
 import (
 	"context"
 	"errors"
+	"time"
 
 	back "github.com/HectorMRC/backend-tech-test"
 	"go.uber.org/zap"
@@ -56,7 +57,11 @@ func (app *RideApplication) Finish(ctx context.Context, rideID string) (*Ride, e
 		return nil, err
 	}
 
-	if err := ride.Finish(app.unlockPrice, app.minutePrice); err != nil {
+	if err := ride.SetEndtime(time.Now()); err != nil {
+		return nil, err
+	}
+
+	if err := ride.SetCost(app.unlockPrice, app.minutePrice); err != nil {
 		return nil, err
 	}
 

@@ -23,15 +23,21 @@ func NewRide(userID, vehicleID string) *Ride {
 	}
 }
 
-func (ride *Ride) Finish(baseCost, minuteCost int) error {
+func (ride *Ride) SetEndtime(t time.Time) error {
 	if ride.end != nil {
 		return back.ErrNotAvailable
 	}
 
-	endTime := time.Now()
-	rideDuration := endTime.Sub(ride.start)
+	ride.end = &t
+	return nil
+}
 
-	ride.end = &endTime
+func (ride *Ride) SetCost(baseCost, minuteCost int) error {
+	if ride.end == nil {
+		return back.ErrNotAvailable
+	}
+
+	rideDuration := ride.end.Sub(ride.start)
 	ride.cost = baseCost + minuteCost*int(rideDuration.Minutes())
 	return nil
 }
